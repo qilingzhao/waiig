@@ -1,7 +1,6 @@
 package lexer
 
 import (
-	`log`
 	`unicode`
 
 	"lexing/token"
@@ -45,7 +44,6 @@ func (l *Lexer) NextToken() *token.Token {
 			Literal: "",
 		}
 	} else if isSymbol(l.rn) {
-		log.Println("symbol")
 		symbol := l.readSymbol()
 		symbolType := token.LookupSymbol(symbol)
 		tok = &token.Token{
