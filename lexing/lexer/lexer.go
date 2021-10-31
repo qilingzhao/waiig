@@ -38,16 +38,15 @@ func (l *Lexer) NextToken() *token.Token {
 
 	// log.Printf("rune is %c", l.rn)
 	if tokenType, exist := token.SymbolLiteral2TokenType[string(l.rn)]; exist {
+		literal := string(l.rn)
+		if tokenType == token.EOF {
+			literal = ""
+		}
 		tok = &token.Token{
 			Type:    tokenType,
-			Literal: string(l.rn),
+			Literal: literal,
 		}
-	} else if l.rn == 0 {
-		tok = &token.Token{
-			Type: token.EOF,
-			Literal: "",
-		}
-	} else if !unicode.IsDigit(l.rn) { // 变量名和关键字不以数字开头
+	}  else if !unicode.IsDigit(l.rn) { // 变量名和关键字不以数字开头
 		word := ""
 		for ; unicode.IsLetter(l.rn) || unicode.IsDigit(l.rn) || l.rn == '_'; l.readRune() {
 			word = word + string(l.rn)

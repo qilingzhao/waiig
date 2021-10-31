@@ -25,6 +25,7 @@ const (
 var SymbolLiteral2TokenType = map[string]TokenType {
 	"=": ASSIGN, "+": PLUS, ",": COMMA, ";": SEMICOLON,
 	"(": LPAREN, ")": RPAREN, "{": LBRACE, "}": RBRACE,
+	string(rune(0)): EOF,
 }
 
 var KeywordLiteral2TokenType = map[string]TokenType {
