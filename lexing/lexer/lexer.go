@@ -36,6 +36,7 @@ func (l *Lexer) NextToken() *token.Token {
 
 	}
 
+	// log.Printf("rune is %c", l.rn)
 	if tokenType, exist := token.SymbolLiteral2TokenType[string(l.rn)]; exist {
 		tok = &token.Token{
 			Type:    tokenType,
@@ -66,6 +67,7 @@ func (l *Lexer) NextToken() *token.Token {
 				Type:  token.ILLEGAL,
 				Literal: word,
 			}
+			l.readRune()
 		}
 		return tok
 	} else if unicode.IsDigit(l.rn) {
