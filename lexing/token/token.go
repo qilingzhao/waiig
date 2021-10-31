@@ -22,9 +22,13 @@ const (
 	LET      = "LET"
 )
 
-var ConstLiteral2TokenType  = map[string]TokenType {
+var SymbolLiteral2TokenType = map[string]TokenType {
 	"=": ASSIGN, "+": PLUS, ",": COMMA, ";": SEMICOLON,
 	"(": LPAREN, ")": RPAREN, "{": LBRACE, "}": RBRACE,
+}
+
+var KeywordLiteral2TokenType = map[string]TokenType {
+	"let": LET, "fn": FUNCTION,
 }
 
 type TokenType string

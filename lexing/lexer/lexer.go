@@ -1,6 +1,8 @@
 package lexer
 
 import (
+	`unicode`
+
 	"lexing/token"
 )
 
@@ -30,16 +32,52 @@ func (l *Lexer) readRune() {
 
 func (l *Lexer) NextToken() *token.Token {
 	tok := &token.Token{}
-	if tokenType, exist := token.ConstLiteral2TokenType[string(l.rn)]; exist {
+	for ; unicode.IsSpace(l.rn); l.readRune() {
+
+	}
+
+	if tokenType, exist := token.SymbolLiteral2TokenType[string(l.rn)]; exist {
 		tok = &token.Token{
 			Type:    tokenType,
 			Literal: string(l.rn),
 		}
-	} else {
+	} else if l.rn == 0 {
 		tok = &token.Token{
 			Type: token.EOF,
 			Literal: "",
 		}
+	} else if !unicode.IsDigit(l.rn) { // 变量名和关键字不以数字开头
+		word := ""
+		for ; unicode.IsLetter(l.rn) || unicode.IsDigit(l.rn) || l.rn == '_'; l.readRune() {
+			word = word + string(l.rn)
+		}
+		if keywordTokenType, existKeyword := token.KeywordLiteral2TokenType[word]; existKeyword {
+			tok = &token.Token{
+				Type:    keywordTokenType,
+				Literal: word,
+			}
+		} else if word != "" {
+			tok = &token.Token{
+				Type:    token.IDENT,
+				Literal: word,
+			}
+		} else {
+			tok = &token.Token{
+				Type:  token.ILLEGAL,
+				Literal: word,
+			}
+		}
+		return tok
+	} else if unicode.IsDigit(l.rn) {
+		word := ""
+		for ; unicode.IsDigit(l.rn); l.readRune() {
+			word = word + string(l.rn)
+		}
+		tok = &token.Token{
+			Type:    token.INT,
+			Literal: word,
+		}
+		return tok
 	}
 	l.readRune()
 	return tok
