@@ -4,12 +4,25 @@ const (
 	ILLEGAL = "ILLEGAL"
 	EOF     = "EOF"
 
-	IDENT = "IDENT" // x y x
-	INT   = "INT"   // 1 2 3
+	// Identifiers + literals
+	IDENT = "IDENT" // add, foobar, x, y, ...
+	INT   = "INT"   // 1343456
 
-	ASSIGN = "="
-	PLUS   = "+"
+	// Operators
+	ASSIGN   = "="
+	PLUS     = "+"
+	MINUS    = "-"
+	BANG     = "!"
+	ASTERISK = "*"
+	SLASH    = "/"
 
+	LT = "<"
+	GT = ">"
+
+	EQ     = "=="
+	NOT_EQ = "!="
+
+	// Delimiters
 	COMMA     = ","
 	SEMICOLON = ";"
 
@@ -18,18 +31,27 @@ const (
 	LBRACE = "{"
 	RBRACE = "}"
 
+	// Keywords
 	FUNCTION = "FUNCTION"
 	LET      = "LET"
+	TRUE     = "TRUE"
+	FALSE    = "FALSE"
+	IF       = "IF"
+	ELSE     = "ELSE"
+	RETURN   = "RETURN"
 )
 
-var SymbolLiteral2TokenType = map[string]TokenType {
-	"=": ASSIGN, "+": PLUS, ",": COMMA, ";": SEMICOLON,
+var symbolLiteral2TokenType = map[string]TokenType{
+	"=": ASSIGN, "+": PLUS, "-": MINUS, "!": BANG, "*": ASTERISK, "/": SLASH,
+	"<": LT, ">": GT, "==": EQ, "!=": NOT_EQ,
+	",": COMMA, ";": SEMICOLON,
 	"(": LPAREN, ")": RPAREN, "{": LBRACE, "}": RBRACE,
-	string(rune(0)): EOF,
+	// string(rune(0)): EOF,
 }
 
-var KeywordLiteral2TokenType = map[string]TokenType {
-	"let": LET, "fn": FUNCTION,
+var keywordLiteral2TokenType = map[string]TokenType{
+	"let": LET, "fn": FUNCTION, "true": TRUE, "false": FALSE,
+	"if": IF, "else": ELSE, "return": RETURN,
 }
 
 type TokenType string
@@ -40,8 +62,15 @@ type Token struct {
 }
 
 func LookupIdent(ident string) TokenType {
-	if keywordType, exist := KeywordLiteral2TokenType[ident]; exist {
+	if keywordType, exist := keywordLiteral2TokenType[ident]; exist {
 		return keywordType
 	}
 	return IDENT
+}
+
+func LookupSymbol(ident string) TokenType {
+	if symbolType, exist := symbolLiteral2TokenType[ident]; exist {
+		return symbolType
+	}
+	return ILLEGAL
 }
