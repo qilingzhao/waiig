@@ -1,40 +1,46 @@
 package lexer
 
 import (
-	`lexing/token`
+	"lexing/token"
 )
 
 type Lexer struct {
-	tokens []*token.Token
-	index int
+	input        string
+	position     int
+	readPosition int
+	rn           rune // support UTF-8
 }
 
 func New(input string) *Lexer {
-	tokens := make([]*token.Token ,0)
-	for _, field := range input {
-		if tokenType, exist := token.ConstLiteral2TokenType[string(field)]; exist {
-			tokens = append(tokens, &token.Token{
-				Type:    tokenType,
-				Literal: string(field),
-			})
-		}
-	}
+	l := &Lexer{input: input}
+	l.readRune()
+	return l
+}
 
-
-	return &Lexer{
-		tokens: append(tokens, &token.Token{
-			Type:    token.EOF,
-			Literal: "",
-		}),
-		index: 0,
+func (l *Lexer) readRune() {
+	inputRunes := []rune(l.input)
+	if l.readPosition >= len(inputRunes) {
+		l.rn = 0
+	} else {
+		l.rn = inputRunes[l.readPosition]
 	}
+	l.position = l.readPosition
+	l.readPosition++
 }
 
 func (l *Lexer) NextToken() *token.Token {
-	now := l.index
-	if now  < len(l.tokens) {
-		l.index++
-		return  l.tokens[now]
+	tok := &token.Token{}
+	if tokenType, exist := token.ConstLiteral2TokenType[string(l.rn)]; exist {
+		tok = &token.Token{
+			Type:    tokenType,
+			Literal: string(l.rn),
+		}
+	} else {
+		tok = &token.Token{
+			Type: token.EOF,
+			Literal: "",
+		}
 	}
-	return nil
+	l.readRune()
+	return tok
 }

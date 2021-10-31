@@ -1,10 +1,18 @@
 package lexer
 
 import (
+	`log`
 	"testing"
 
 	"lexing/token"
 )
+
+func TestReadRune(t *testing.T) {
+	lexer := New("hello 世界 world!")
+	for ; lexer.rn != 0; lexer.readRune() {
+		log.Printf("rune is %c", lexer.rn)
+	}
+}
 
 func TestNextToken(t *testing.T) {
 	input := `=+(){},;`
