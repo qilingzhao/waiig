@@ -39,13 +39,15 @@ const (
 	IF       = "IF"
 	ELSE     = "ELSE"
 	RETURN   = "RETURN"
+
+	BitLifeMove = "BitLifeMove"
 )
 
 var symbolLiteral2TokenType = map[string]TokenType{
 	"=": ASSIGN, "+": PLUS, "-": MINUS, "!": BANG, "*": ASTERISK, "/": SLASH,
 	"<": LT, ">": GT, "==": EQ, "!=": NOT_EQ,
 	",": COMMA, ";": SEMICOLON,
-	"(": LPAREN, ")": RPAREN, "{": LBRACE, "}": RBRACE,
+	"(": LPAREN, ")": RPAREN, "{": LBRACE, "}": RBRACE, "<<": BitLifeMove,
 	// string(rune(0)): EOF,
 }
 

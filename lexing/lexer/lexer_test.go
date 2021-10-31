@@ -39,7 +39,7 @@ if (5 < 10) {
 	return false;
 }
 
-10 == 10;
+10 == 10;<<<<
 10 != 9;~
 `
 
@@ -116,6 +116,8 @@ if (5 < 10) {
 		{token.EQ, "=="},
 		{token.INT, "10"},
 		{token.SEMICOLON, ";"},
+		{token.BitLifeMove, "<<"},
+		{token.BitLifeMove, "<<"},
 		{token.INT, "10"},
 		{token.NOT_EQ, "!="},
 		{token.INT, "9"},
