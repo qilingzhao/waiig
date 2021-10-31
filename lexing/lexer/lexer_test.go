@@ -60,7 +60,7 @@ let ten = 10;
 		{token.IDENT, "ten"},
 		{token.RPAREN, ")"},
 		{token.SEMICOLON, ";"},
-		{token.ILLEGAL, ""},
+		{token.ILLEGAL, "~"},
 		{token.EOF, ""},
 	}
 	l := New(input)

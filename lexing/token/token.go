@@ -38,3 +38,10 @@ type Token struct {
 	Type    TokenType
 	Literal string
 }
+
+func LookupIdent(ident string) TokenType {
+	if keywordType, exist := KeywordLiteral2TokenType[ident]; exist {
+		return keywordType
+	}
+	return IDENT
+}

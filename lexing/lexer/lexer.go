@@ -46,40 +46,45 @@ func (l *Lexer) NextToken() *token.Token {
 			Type:    tokenType,
 			Literal: literal,
 		}
-	}  else if !unicode.IsDigit(l.rn) { // 变量名和关键字不以数字开头
-		word := ""
-		for ; unicode.IsLetter(l.rn) || unicode.IsDigit(l.rn) || l.rn == '_'; l.readRune() {
-			word = word + string(l.rn)
-		}
-		if keywordTokenType, existKeyword := token.KeywordLiteral2TokenType[word]; existKeyword {
-			tok = &token.Token{
-				Type:    keywordTokenType,
-				Literal: word,
-			}
-		} else if word != "" {
-			tok = &token.Token{
-				Type:    token.IDENT,
-				Literal: word,
-			}
-		} else {
-			tok = &token.Token{
-				Type:  token.ILLEGAL,
-				Literal: word,
-			}
-			l.readRune()
+	}  else if unicode.IsLetter(l.rn) { // 变量名和关键字以字母开头
+		ident := l.readIdentifier()
+		identType := token.LookupIdent(ident)
+		tok = &token.Token{
+			Type:    identType,
+			Literal: ident,
 		}
 		return tok
 	} else if unicode.IsDigit(l.rn) {
-		word := ""
-		for ; unicode.IsDigit(l.rn); l.readRune() {
-			word = word + string(l.rn)
-		}
+		num := l.readNumber()
 		tok = &token.Token{
 			Type:    token.INT,
-			Literal: word,
+			Literal: num,
 		}
 		return tok
+	} else {
+		tok = &token.Token{
+			Type:    token.ILLEGAL,
+			Literal: string(l.rn),
+		}
 	}
 	l.readRune()
 	return tok
+}
+
+func (l *Lexer) readIdentifier() string {
+	start := l.position
+	for ; unicode.IsLetter(l.rn) || l.rn == '_'; l.readRune() {
+
+	}
+	rns := []rune(l.input)
+	return string(rns[start:l.position])
+}
+
+func (l *Lexer) readNumber() string {
+	start := l.position
+	for ; unicode.IsNumber(l.rn); l.readRune() {
+
+	}
+	rns := []rune(l.input)
+	return string(rns[start:l.position])
 }
